@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Plus, Search, Pencil, Trash2, Mail, Phone } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, Mail, Phone, Building2 } from "lucide-react";
 import { AppShell } from "@/components/leadflow/AppShell";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -23,7 +23,7 @@ import {
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/leads")({
-  head: () => ({ meta: [{ title: "Leads — LeadFlow CRM" }] }),
+  head: () => ({ meta: [{ title: "Leads — LeadMaster CRM" }] }),
   component: LeadsPage,
 });
 
@@ -53,7 +53,12 @@ function LeadsInner() {
       if (source !== "All" && l.source !== source) return false;
       if (q.trim()) {
         const s = q.toLowerCase();
-        if (!l.name.toLowerCase().includes(s) && !l.email.toLowerCase().includes(s)) return false;
+        if (
+          !l.name.toLowerCase().includes(s) &&
+          !l.email.toLowerCase().includes(s) &&
+          !(l.company || "").toLowerCase().includes(s)
+        )
+          return false;
       }
       return true;
     });
@@ -69,14 +74,16 @@ function LeadsInner() {
           <h2 className="text-2xl font-bold tracking-tight text-foreground">All Leads</h2>
           <p className="text-sm text-muted-foreground">{filtered.length} of {leads.length} leads shown</p>
         </div>
-        <Button onClick={openAdd}><Plus className="mr-1 h-4 w-4" /> Add Lead</Button>
+        <Button onClick={openAdd} className="bg-gradient-to-r from-primary to-accent-2 text-primary-foreground shadow-sm hover:opacity-90">
+          <Plus className="mr-1 h-4 w-4" /> Add Lead
+        </Button>
       </div>
 
       <Card className="p-4">
         <div className="grid gap-3 md:grid-cols-[1fr_auto_auto]">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input placeholder="Search by name or email..." className="pl-9" value={q} onChange={(e) => setQ(e.target.value)} />
+            <Input placeholder="Search by name, email or company..." className="pl-9" value={q} onChange={(e) => setQ(e.target.value)} />
           </div>
           <Select value={status} onValueChange={(v) => setStatus(v as typeof status)}>
             <SelectTrigger className="md:w-40"><SelectValue placeholder="Status" /></SelectTrigger>
@@ -91,15 +98,15 @@ function LeadsInner() {
 
       <Card className="overflow-hidden p-0">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[900px] text-sm">
+          <table className="w-full min-w-[1000px] text-sm">
             <thead className="bg-muted/50 text-xs uppercase tracking-wider text-muted-foreground">
               <tr>
                 <th className="px-4 py-3 text-left font-medium">Lead</th>
+                <th className="px-4 py-3 text-left font-medium">Company</th>
                 <th className="px-4 py-3 text-left font-medium">Contact</th>
                 <th className="px-4 py-3 text-left font-medium">Source</th>
                 <th className="px-4 py-3 text-left font-medium">Status</th>
                 <th className="px-4 py-3 text-left font-medium">Follow-up</th>
-                <th className="px-4 py-3 text-left font-medium">Created</th>
                 <th className="px-4 py-3 text-right font-medium">Actions</th>
               </tr>
             </thead>
@@ -111,13 +118,19 @@ function LeadsInner() {
                 <tr key={l.id} className="transition-colors hover:bg-muted/30">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/15 text-xs font-semibold text-primary">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent-2 text-xs font-semibold text-white">
                         {l.name.split(" ").map((s) => s[0]).slice(0, 2).join("")}
                       </div>
                       <div className="min-w-0">
                         <p className="truncate font-medium text-foreground">{l.name}</p>
                         {l.notes && <p className="line-clamp-1 max-w-xs text-xs text-muted-foreground">{l.notes}</p>}
                       </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-1.5 text-sm text-foreground">
+                      <Building2 className="h-3.5 w-3.5 text-muted-foreground" />
+                      <span className="truncate">{l.company || "—"}</span>
                     </div>
                   </td>
                   <td className="px-4 py-3">
@@ -147,9 +160,6 @@ function LeadsInner() {
                   </td>
                   <td className="px-4 py-3 text-xs text-muted-foreground">
                     {new Date(l.followUpDate).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
-                  </td>
-                  <td className="px-4 py-3 text-xs text-muted-foreground">
-                    {new Date(l.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex justify-end gap-1">

@@ -57,9 +57,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "LeadFlow CRM" },
-      { name: "description", content: "LeadFlow CRM — Manage client leads, follow-ups, and conversions." },
+      { title: "LeadMaster CRM" },
+      { name: "description", content: "LeadMaster CRM — Capture, manage, and convert client leads with follow-ups and analytics." },
     ],
+
     links: [{ rel: "stylesheet", href: appCss }],
   }),
   shellComponent: RootShell,
@@ -75,9 +76,10 @@ function RootShell({ children }: { children: ReactNode }) {
         <HeadContent />
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{var t=localStorage.getItem('leadflow.theme.v1');if(t==='dark')document.documentElement.classList.add('dark');}catch(e){}`,
+            __html: `try{var t=localStorage.getItem('leadmaster.theme.v1');if(t==='dark')document.documentElement.classList.add('dark');}catch(e){}`,
           }}
         />
+
       </head>
       <body>
         {children}

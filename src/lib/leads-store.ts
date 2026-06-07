@@ -6,6 +6,7 @@ export interface Lead {
   name: string;
   email: string;
   phone: string;
+  company: string;
   source: LeadSource;
   status: LeadStatus;
   followUpDate: string; // ISO date (YYYY-MM-DD)
@@ -13,29 +14,23 @@ export interface Lead {
   createdAt: string; // ISO datetime
 }
 
-const KEY = "leadflow.leads.v1";
-const AUTH_KEY = "leadflow.auth.v1";
-const THEME_KEY = "leadflow.theme.v1";
+const KEY = "leadmaster.leads.v2";
+const AUTH_KEY = "leadmaster.auth.v1";
+const THEME_KEY = "leadmaster.theme.v1";
 
-export const DEMO_EMAIL = "admin@leadflow.com";
+export const DEMO_EMAIL = "admin@leadmaster.com";
 export const DEMO_PASSWORD = "admin123";
+
+export const PROFILE = {
+  name: "Niveditha Arige",
+  role: "Full Stack Web Development Intern",
+  email: DEMO_EMAIL,
+  organization: "LeadMaster CRM",
+};
 
 function uid() {
   return Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
 }
-
-const SAMPLE: Omit<Lead, "id">[] = [
-  { name: "Aarav Sharma", email: "aarav.sharma@gmail.com", phone: "+91 98201 11221", source: "Website", status: "New", followUpDate: addDays(2), notes: "Asked about pricing for the starter plan.", createdAt: daysAgo(1) },
-  { name: "Priya Verma", email: "priya.verma@outlook.com", phone: "+91 99887 32145", source: "LinkedIn", status: "Contacted", followUpDate: addDays(4), notes: "Scheduled a discovery call next Tuesday.", createdAt: daysAgo(3) },
-  { name: "Rahul Mehta", email: "rahul.mehta@zoho.com", phone: "+91 90876 55421", source: "Referral", status: "Converted", followUpDate: addDays(14), notes: "Signed up for the Pro plan. Onboarding complete.", createdAt: daysAgo(8) },
-  { name: "Sneha Iyer", email: "sneha.iyer@yahoo.com", phone: "+91 88990 12345", source: "Instagram", status: "New", followUpDate: addDays(1), notes: "Interested in social-media management add-on.", createdAt: daysAgo(0) },
-  { name: "Karan Patel", email: "karan.patel@gmail.com", phone: "+91 91234 56789", source: "Website", status: "Contacted", followUpDate: addDays(5), notes: "Sent proposal; awaiting feedback from CTO.", createdAt: daysAgo(5) },
-  { name: "Meera Joshi", email: "meera.joshi@hotmail.com", phone: "+91 93456 22110", source: "LinkedIn", status: "Converted", followUpDate: addDays(30), notes: "Annual contract closed. Renewal Q3.", createdAt: daysAgo(12) },
-  { name: "Vikram Singh", email: "vikram.singh@gmail.com", phone: "+91 99001 22334", source: "Referral", status: "New", followUpDate: addDays(3), notes: "Referred by Rahul Mehta.", createdAt: daysAgo(2) },
-  { name: "Anjali Rao", email: "anjali.rao@protonmail.com", phone: "+91 98345 67890", source: "Website", status: "Contacted", followUpDate: addDays(6), notes: "Requested a custom demo for her team of 12.", createdAt: daysAgo(4) },
-  { name: "Devansh Kapoor", email: "devansh.k@gmail.com", phone: "+91 97654 32109", source: "Instagram", status: "New", followUpDate: addDays(7), notes: "DM enquiry about freelancer plan.", createdAt: daysAgo(1) },
-  { name: "Riya Nair", email: "riya.nair@outlook.com", phone: "+91 96123 45678", source: "Other", status: "Converted", followUpDate: addDays(20), notes: "Came through a Twitter thread. Closed quickly.", createdAt: daysAgo(10) },
-];
 
 function addDays(d: number) {
   const dt = new Date();
@@ -47,6 +42,21 @@ function daysAgo(d: number) {
   dt.setDate(dt.getDate() - d);
   return dt.toISOString();
 }
+
+const SAMPLE: Omit<Lead, "id">[] = [
+  { name: "Ananya Reddy", email: "ananya.reddy@brightlabs.io", phone: "+91 90123 45678", company: "BrightLabs Analytics", source: "Website", status: "New", followUpDate: addDays(2), notes: "Filled the demo form — wants pricing for a 20-person data team.", createdAt: daysAgo(1) },
+  { name: "Rohan Kapadia", email: "rohan@finquill.co", phone: "+91 98456 11098", company: "FinQuill", source: "LinkedIn", status: "Contacted", followUpDate: addDays(3), notes: "Replied to outbound message; books discovery for Thursday 4 PM.", createdAt: daysAgo(4) },
+  { name: "Sara Thomas", email: "sara.t@craftmade.studio", phone: "+91 99987 22341", company: "Craftmade Studio", source: "Instagram", status: "New", followUpDate: addDays(1), notes: "DM enquiry about social-media + landing-page bundle.", createdAt: daysAgo(0) },
+  { name: "Manav Bhatia", email: "manav@northpeakventures.com", phone: "+91 91100 55421", company: "Northpeak Ventures", source: "Referral", status: "Converted", followUpDate: addDays(21), notes: "Closed annual retainer ₹4.8L. Onboarding in progress.", createdAt: daysAgo(11) },
+  { name: "Tara Banerjee", email: "tara@lumendesign.in", phone: "+91 88321 44009", company: "Lumen Design Co.", source: "Website", status: "Contacted", followUpDate: addDays(5), notes: "Proposal v2 sent; awaiting sign-off from founder.", createdAt: daysAgo(6) },
+  { name: "Yuvraj Malhotra", email: "yuvraj@quantumforge.dev", phone: "+91 90876 33210", company: "QuantumForge", source: "LinkedIn", status: "New", followUpDate: addDays(4), notes: "CTO downloaded whitepaper; interested in API integration.", createdAt: daysAgo(2) },
+  { name: "Isha Pillai", email: "isha.pillai@verdantfoods.com", phone: "+91 93456 78812", company: "Verdant Foods", source: "Referral", status: "Converted", followUpDate: addDays(30), notes: "Signed up via partner referral. Quarterly renewal locked.", createdAt: daysAgo(15) },
+  { name: "Aditya Saxena", email: "aditya@pixeltrail.agency", phone: "+91 97000 12233", company: "PixelTrail Agency", source: "Website", status: "Contacted", followUpDate: addDays(7), notes: "Wants white-label option for client projects.", createdAt: daysAgo(5) },
+  { name: "Neha Choudhary", email: "neha@cobalt-hr.com", phone: "+91 99220 87651", company: "Cobalt HR", source: "Instagram", status: "New", followUpDate: addDays(6), notes: "Reels lead — asked for case studies in HR-tech vertical.", createdAt: daysAgo(1) },
+  { name: "Kabir Anand", email: "kabir@orbitlogistics.io", phone: "+91 96543 22019", company: "Orbit Logistics", source: "Other", status: "Converted", followUpDate: addDays(45), notes: "Closed via Twitter conversation. Loves the analytics module.", createdAt: daysAgo(20) },
+  { name: "Pooja Deshmukh", email: "pooja@sunmarktextiles.com", phone: "+91 90011 22334", company: "Sunmark Textiles", source: "Website", status: "New", followUpDate: addDays(8), notes: "Family-run business exploring digital transformation.", createdAt: daysAgo(0) },
+  { name: "Rehan Qureshi", email: "rehan@nimbusedu.org", phone: "+91 95678 11223", company: "Nimbus EdTech", source: "LinkedIn", status: "Contacted", followUpDate: addDays(2), notes: "Needs SSO and multi-tenant support before purchase.", createdAt: daysAgo(8) },
+];
 
 export function loadLeads(): Lead[] {
   if (typeof window === "undefined") return [];

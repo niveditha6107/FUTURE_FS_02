@@ -1,14 +1,16 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Users, BarChart3, LogOut, Moon, Sun, Menu, X, Sparkles } from "lucide-react";
+import { LayoutDashboard, Users, BarChart3, LogOut, Moon, Sun, Menu, X, Crown, CalendarClock, Settings } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { getTheme, isAuthed, logout, setTheme } from "@/lib/leads-store";
+import { getTheme, isAuthed, logout, setTheme, PROFILE } from "@/lib/leads-store";
 
 const nav = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
   { to: "/leads", label: "Leads", icon: Users },
+  { to: "/followups", label: "Follow-ups", icon: CalendarClock },
   { to: "/analytics", label: "Analytics", icon: BarChart3 },
+  { to: "/settings", label: "Settings", icon: Settings },
 ];
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -38,22 +40,23 @@ export function AppShell({ children }: { children: ReactNode }) {
     navigate({ to: "/login" });
   };
 
+  const initials = PROFILE.name.split(" ").map((s) => s[0]).slice(0, 2).join("");
+
   return (
     <div className="flex min-h-screen w-full bg-background">
-      {/* Sidebar */}
       <aside
         className={cn(
           "fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground transition-transform lg:static lg:translate-x-0",
           mobileOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
-        <div className="flex h-16 items-center gap-2 border-b border-sidebar-border px-5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
-            <Sparkles className="h-5 w-5" />
+        <div className="flex h-16 items-center gap-2.5 border-b border-sidebar-border px-5">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent-2 text-white shadow-md shadow-primary/30">
+            <Crown className="h-4.5 w-4.5" />
           </div>
           <div>
-            <p className="text-sm font-semibold leading-tight">LeadFlow</p>
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground">CRM</p>
+            <p className="text-sm font-bold leading-tight tracking-tight">LeadMaster</p>
+            <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">CRM Suite</p>
           </div>
         </div>
 
@@ -67,9 +70,9 @@ export function AppShell({ children }: { children: ReactNode }) {
                 to={item.to}
                 onClick={() => setMobileOpen(false)}
                 className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                  "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all",
                   active
-                    ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
+                    ? "bg-gradient-to-r from-primary to-accent-2 text-white shadow-md shadow-primary/25"
                     : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
                 )}
               >
@@ -81,15 +84,15 @@ export function AppShell({ children }: { children: ReactNode }) {
         </nav>
 
         <div className="border-t border-sidebar-border p-3">
-          <div className="mb-2 flex items-center gap-3 rounded-lg px-3 py-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/15 text-sm font-semibold text-primary">
-              A
+          <Link to="/settings" onClick={() => setMobileOpen(false)} className="mb-2 flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-sidebar-accent">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent-2 text-xs font-semibold text-white">
+              {initials}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium">Admin</p>
-              <p className="truncate text-xs text-muted-foreground">admin@leadflow.com</p>
+              <p className="truncate text-sm font-medium">{PROFILE.name}</p>
+              <p className="truncate text-xs text-muted-foreground">{PROFILE.role}</p>
             </div>
-          </div>
+          </Link>
           <Button variant="ghost" size="sm" className="w-full justify-start" onClick={doLogout}>
             <LogOut className="mr-2 h-4 w-4" />
             Log out
@@ -104,9 +107,8 @@ export function AppShell({ children }: { children: ReactNode }) {
         />
       )}
 
-      {/* Main */}
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-20 flex h-16 items-center justify-between gap-3 border-b border-border bg-background/80 px-4 backdrop-blur-md md:px-6">
+        <header className="sticky top-0 z-20 flex h-16 items-center justify-between gap-3 border-b border-border bg-background/70 px-4 backdrop-blur-md md:px-6">
           <div className="flex items-center gap-2">
             <Button
               variant="ghost"
@@ -117,8 +119,8 @@ export function AppShell({ children }: { children: ReactNode }) {
             >
               {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
-            <h1 className="text-base font-semibold text-foreground md:text-lg">
-              {nav.find((n) => n.to === pathname)?.label ?? "LeadFlow"}
+            <h1 className="bg-gradient-to-r from-primary to-accent-2 bg-clip-text text-base font-semibold text-transparent md:text-lg">
+              {nav.find((n) => n.to === pathname)?.label ?? "LeadMaster"}
             </h1>
           </div>
           <Button variant="outline" size="icon" onClick={toggleTheme} aria-label="Toggle theme">
@@ -129,7 +131,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <main className="flex-1 px-4 py-6 md:px-8 md:py-8">{children}</main>
 
         <footer className="border-t border-border bg-card/40 px-4 py-4 text-center text-xs text-muted-foreground md:px-8">
-          Developed by <span className="font-semibold text-foreground">Niveditha Arige</span> · Future Interns — Full Stack Web Development
+          Developed by <span className="bg-gradient-to-r from-primary to-accent-2 bg-clip-text font-semibold text-transparent">Niveditha Arige</span>
         </footer>
       </div>
     </div>
