@@ -35,6 +35,7 @@ const empty = {
   name: "",
   email: "",
   phone: "",
+  company: "",
   source: "Website" as LeadSource,
   status: "New" as LeadStatus,
   followUpDate: new Date().toISOString().slice(0, 10),
@@ -48,7 +49,7 @@ export function LeadFormDialog({ open, onOpenChange, initial, onSubmit }: Props)
     if (open) {
       if (initial) {
         const { id: _id, createdAt: _c, ...rest } = initial;
-        setForm(rest);
+        setForm({ ...empty, ...rest });
       } else {
         setForm(empty);
       }
@@ -80,9 +81,13 @@ export function LeadFormDialog({ open, onOpenChange, initial, onSubmit }: Props)
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={submit} className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-1.5 sm:col-span-2">
+          <div className="space-y-1.5">
             <Label htmlFor="name">Full Name *</Label>
             <Input id="name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Jane Cooper" />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="company">Company Name</Label>
+            <Input id="company" value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} placeholder="Acme Inc." />
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="email">Email *</Label>
@@ -120,7 +125,9 @@ export function LeadFormDialog({ open, onOpenChange, initial, onSubmit }: Props)
           </div>
           <DialogFooter className="sm:col-span-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-            <Button type="submit">{initial ? "Save changes" : "Add Lead"}</Button>
+            <Button type="submit" className="bg-gradient-to-r from-primary to-accent-2 text-primary-foreground hover:opacity-90">
+              {initial ? "Save changes" : "Add Lead"}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>
